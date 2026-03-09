@@ -1,0 +1,35 @@
+# cluster.yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+ 
+metadata:
+  name: gitops-demo
+  region: eu-west-1
+  version: "1.29"
+  tags:
+    project: gitops-demo
+    env: prod
+ 
+iam:
+  withOIDC: true          # required for IRSA (IAM Roles for Service Accounts)
+ 
+addons:
+  - name: vpc-cni         # AWS VPC CNI — assigns real VPC IPs to pods
+  - name: coredns
+  - name: kube-proxy
+ 
+managedNodeGroups:
+  - name: ng-general
+    instanceType: t3.medium
+    minSize: 2
+    maxSize: 4
+    desiredCapacity: 2
+    privateNetworking: true   # nodes live in private subnets
+    availabilityZones:
+      - eu-west-1a
+      - eu-west-1b
+    labels:
+      role: general
+    tags:
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/gitops-demo: "owned"
