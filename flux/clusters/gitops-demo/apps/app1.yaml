@@ -1,0 +1,34 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: app1
+  namespace: demo
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: ./charts/myapp
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+      interval: 1m
+  values:
+    replicaCount: 1
+    fullnameOverride: "app1-flux"
+    service:
+      type: ClusterIP
+      port: 80
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+      hosts:
+        - host: ""
+          paths:
+            - path: /app1-flux
+              pathType: Prefix
+    extraConfigMap:
+      enabled: true
+      content: "<h1>Hello from App1 — deployed by Flux! 🚀</h1>"
