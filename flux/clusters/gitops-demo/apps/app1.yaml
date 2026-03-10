@@ -31,5 +31,5 @@ spec:
               pathType: Prefix
     extraConfigMap:
       enabled: true
-      content: "<h1> deployed by Flux! 🚀/updated via git push! ✨
+      content: "<h1> deployed by Flux! /updated via git push! 
 </h1>"
