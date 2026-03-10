@@ -1,0 +1,18 @@
+replicaCount: 1
+fullnameOverride: "app1"
+service:
+  type: ClusterIP
+  port: 80
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: ""
+      paths:
+        - path: /app1
+          pathType: Prefix
+extraConfigMap:
+  enabled: true
+  content: "<h1>Hello from App1 </h1>"

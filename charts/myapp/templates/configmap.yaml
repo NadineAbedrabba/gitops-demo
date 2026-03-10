@@ -1,0 +1,10 @@
+{{- if .Values.extraConfigMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.fullnameOverride }}-html
+  namespace: {{ .Release.Namespace }}
+data:
+  index.html: |
+    {{ .Values.extraConfigMap.content }}
+{{- end }}
