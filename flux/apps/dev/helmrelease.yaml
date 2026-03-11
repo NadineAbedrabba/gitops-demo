@@ -1,0 +1,42 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: myapp
+  namespace: dev
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: ./charts/myapp
+      version: "0.1.0"
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+      interval: 1m
+  values:
+    replicaCount: 1
+    fullnameOverride: "myapp-dev"
+    service:
+      type: ClusterIP
+      port: 80
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+      hosts:
+        - host: ""
+          paths:
+            - path: /dev
+              pathType: Prefix
+    extraConfigMap:
+      enabled: true
+      content: "<h1>Hello from Dev 🛠️ — v0.1.0</h1>"
+    resources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
+      requests:
+        cpu: 50m
+        memory: 32Mi
